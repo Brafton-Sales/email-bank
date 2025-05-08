@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brafton Sales Follow-Up Bank</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Brafton Brand Style Guide Integration & Layout Refinements */
+        :root {
+            --sidebar-width-expanded: 200px; 
+            --sidebar-width-collapsed: 80px; 
+            --top-header-height: 56px; 
+            --brafton-ink-darker: #2C3E50; /* Darker shade for sidebar */
+            --brafton-ink: #344754; /* Original Ink, now for Header */
+            --brafton-charcoal: #424143; /* Keep for reference */
+            --brafton-ocean: #338892;
+            --brafton-storm: #135C68;
+            --brafton-coral: #6ECAD2;
+            --brafton-pale: #EAEDF2;
+            --brafton-light-pale: #F8F9FA;
+            --brafton-basic-gray: #BCBEC0;
+            --brafton-sunrise: #F7C24F;
+            --brafton-cristaline: #0AA9B6;
+            --brafton-foam: #E2F5F6;
+            --brafton-green: #8CC040; 
+            --brafton-desert: #FF8C32; 
+        }
+
+        body {
+            font-family: 'Proxima Nova', 'Inter', sans-serif; 
+            background-color: var(--brafton-light-pale); 
+            color: #2c3f4a; 
+            margin: 0;
+            display: flex; 
+            padding-top: var(--top-header-height); 
+        }
+
+        /* --- Top Header --- */
+        .top-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--top-header-height);
+            background-color: var(--brafton-ink); /* Header Color: Ink */
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 1rem; 
+            z-index: 300; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header-left { 
+            display: flex;
+            align-items: center;
+        }
+        .hamburger-toggle { 
+           background: none;
+           border: none;
+           padding: 0.5rem; 
+           margin-right: 1rem; 
+           cursor: pointer;
+        }
+        .hamburger-toggle svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--brafton-green); /* Brafton Green */
+            stroke-width: 2.5; 
+        }
+        .top-header-logo-text { 
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white; 
+            line-height: 1; 
+        }
+
+
+        /* --- Sidebar Navigation --- */
+        .sidebar {
+            width: var(--sidebar-width-expanded);
+            height: calc(100vh - var(--top-header-height)); 
+            position: fixed;
+            top: var(--top-header-height); 
+            left: 0;
+            background-color: var(--brafton-ink-darker); /* Sidebar Color: Darker Ink */
+            color: white;
+            padding: 1.5rem 0;
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            z-index: 200; 
+            overflow-x: hidden; 
+        }
+        .sidebar.collapsed {
+            width: var(--sidebar-width-collapsed);
+        }
+        .sidebar-header {
+            display: none; 
+        }
+        
+        .sidebar nav {
+            flex-grow: 1;
+            margin-top: 1rem; 
+        }
+        .sidebar nav a {
+            display: flex;
+            align-items: center;
+            /* MODIFIED: Reduced horizontal padding */
+            padding: 0.75rem 0.75rem; 
+            color: var(--brafton-pale);
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            white-space: nowrap; 
+            overflow: hidden;
+            justify-content: flex-start; 
+            cursor: pointer; 
+        }
+         .sidebar.collapsed nav a {
+           justify-content: center; 
+           padding-left: 0; 
+           padding-right: 0; 
+         }
+
+        .sidebar nav a:hover, .sidebar nav a.active {
+            background-color: var(--brafton-charcoal); /* Active/Hover uses Charcoal */
+            color: white;
+        }
+        .sidebar nav a .nav-icon { 
+            flex-shrink: 0;
+            margin-right: 0; 
+            width: var(--sidebar-width-collapsed); 
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+        }
+         .sidebar:not(.collapsed) nav a .nav-icon {
+           width: auto; 
+           margin-right: 0.75rem; 
+           min-width: 24px; 
+         }
+        .sidebar nav a .nav-icon svg {
+            width: 20px; 
+            height: 20px;
+            fill: currentColor; 
+        }
+
+        .sidebar nav a .nav-text {
+            opacity: 1;
+            transition: opacity 0.2s ease, width 0.2s ease;
+            margin-left: 0; 
+        }
+        .sidebar.collapsed nav a .nav-text {
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+        }
+
+        /* Hide the separate toggle button */
+        .sidebar-toggle-button { 
+           display: none;
+        }
+
+
+        /* --- Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            margin-left: var(--sidebar-width-expanded); 
+            /* MODIFIED: Increased top padding */
+            padding: 3rem 2rem 2rem 2rem; /* Increased top padding to 3rem */
+            transition: margin-left 0.3s ease;
+            min-width: 0; 
+        }
+        .sidebar.collapsed + .main-content {
+            margin-left: var(--sidebar-width-collapsed); 
+        }
+
+        /* --- General Styles --- */
+        .container { max-width: 60rem; margin-left: auto; margin-right: auto; }
+        /* Card styling adjusted for simpler template view */
+        .card { 
+            background-color: white; 
+            border-radius: 0.75rem; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07); 
+            margin-bottom: 1rem; 
+            padding: 1.5rem; 
+            transition: box-shadow 0.3s ease-in-out; 
+            border: 1px solid var(--brafton-pale); 
+            display: flex; /* Added for layout */
+            flex-direction: column; /* Stack items vertically */
+            justify-content: space-between; /* Push button to bottom */
+            min-height: 150px; /* Ensure a minimum height */
+        }
+        .card:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07); }
+        .card h3 { /* Use Case Title */
+            font-family: 'Proxima Nova', 'Inter', sans-serif; 
+            font-size: 1.125rem; 
+            font-weight: 600; 
+            color: #2c3f4a; 
+            margin-bottom: 0.75rem; 
+        }
+        /* Removed h4 styling as it's no longer needed on the card */
+
+        /* Code block styling remains for modals */
+        .code-block { font-family: 'Proxima Nova', 'Inter', sans-serif; background-color: var(--brafton-light-pale); border: 1px solid var(--brafton-pale); border-radius: 0.5rem; padding: 1rem; margin-top: 0.5rem; margin-bottom: 0.75rem; white-space: normal; font-size: 0.9rem; color: var(--brafton-ink); /* max-height removed, handled by modal scroll */ overflow-y: auto; line-height: 1.6; }
+        .code-block p { margin-bottom: 0.75em; }
+        .code-block p:last-child { margin-bottom: 0; }
+        .code-block ul { list-style-type: disc; margin-left: 1.25em; margin-bottom: 0.75em; padding-left: 0.5em; }
+        .code-block li { margin-bottom: 0.35em; }
+        .code-block strong { font-weight: 700; color: var(--brafton-storm); }
+        .placeholder { color: #C75200; background-color: #FFF3E0; padding: 0.1em 0.4em; border-radius: 0.25em; font-weight: 500; display: inline-block; margin: 0.1em 0; }
+        .placeholder-bracket { color: #006978; background-color: #E0F7FA; padding: 0.1em 0.4em; border-radius: 0.25em; font-weight: 500; display: inline-block; margin: 0.1em 0; }
+
+        /* Copy button styling remains for modals */
+        .copy-button { background-color: var(--brafton-ocean); color: white; font-family: 'Proxima Nova', 'Inter', sans-serif; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.375rem; cursor: pointer; transition: background-color 0.2s ease-in-out, transform 0.1s ease; border: none; font-size: 0.875rem; display: inline-block; margin-top: 0.75rem; margin-bottom: 0.25rem; }
+        .copy-button:hover { background-color: var(--brafton-storm); }
+        .copy-button:active { transform: scale(0.98); }
+        .copy-button.copied { background-color: var(--brafton-cristaline); }
+
+        /* View Template Button Styling */
+        .view-template-button {
+            background-color: var(--brafton-coral); 
+            color: var(--brafton-ink-darker); 
+            font-family: 'Proxima Nova', 'Inter', sans-serif; 
+            font-weight: 600; 
+            padding: 0.6rem 1.2rem; 
+            border-radius: 0.375rem; 
+            cursor: pointer; 
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease; 
+            border: none; 
+            font-size: 0.875rem; 
+            display: inline-block; 
+            margin-top: auto; /* Pushes button to bottom */
+            align-self: flex-start; /* Align button left */
+        }
+        .view-template-button:hover { background-color: #5ABBC3; /* Slightly darker coral */ }
+        .view-template-button:active { transform: scale(0.98); }
+        
+        .page-title { font-family: 'Proxima Nova', 'Inter', sans-serif; font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; color: #2c3f4a; }
+        @media (min-width: 768px) { .page-title { font-size: 3rem; line-height: 1; } }
+        .section-title { font-family: 'Proxima Nova', 'Inter', sans-serif; font-size: 1.875rem; font-weight: 700; color: #2c3f4a; margin-top: 2rem; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--brafton-ocean); }
+        .sub-section-title { font-family: 'Proxima Nova', 'Inter', sans-serif; font-size: 1.25rem; font-weight: 600; color: var(--brafton-ink); margin-top: 2.5rem; margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--brafton-basic-gray); }
+
+        .pill { display: inline-block; padding: 0.375rem 0.875rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; margin-right: 0.5rem; margin-bottom: 0.5rem; text-transform: capitalize; }
+        .pill-foam-ocean { background-color: var(--brafton-foam); color: var(--brafton-ocean); }
+        .pill-ocean-blue { background-color: var(--brafton-ocean); color: #FFFFFF; }
+        .pill-sunrise { background-color: var(--brafton-sunrise); color: #2c3f4a; }
+
+        ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1rem; color: #2c3f4a; }
+        li { margin-bottom: 0.75rem; }
+
+        .filter-controls-wrapper { 
+            max-width: 60rem; 
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 2rem; 
+        }
+        .filter-controls {
+            padding-top: 1rem; 
+            display: flex;
+            flex-direction: column; 
+            gap: 1rem; 
+            background-color: white; 
+            padding: 1.5rem; 
+            border-radius: 0.75rem;
+            border: 1px solid var(--brafton-pale);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07);
+        }
+        .filter-group { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+        .filter-group-label { font-family: 'Proxima Nova', 'Inter', sans-serif; font-weight: 600; font-size: 0.875rem; color: var(--brafton-charcoal); margin-right: 0.5rem; margin-bottom: 0.25rem; display: flex; align-items: center; cursor: pointer; }
+        .filter-group-label .arrow { margin-left: 0.25rem; transition: transform 0.2s ease-in-out; font-size: 0.8em; }
+        .filter-group-label .arrow.collapsed { transform: rotate(-90deg); }
+        .filter-group-label .toggle-text { 
+            font-size: 0.8em;
+            margin-left: 0.35rem;
+            color: var(--brafton-ocean);
+            font-weight: 500;
+        }
+
+        #tag-filters-container, #email-library-tag-filters-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 0.5rem; 
+            max-height: 200px; 
+            overflow: hidden; 
+            transition: max-height 0.3s ease-out, margin-top 0.3s ease-out; 
+            margin-top: 0.5rem; 
+        }
+        #tag-filters-container.collapsed, #email-library-tag-filters-container.collapsed { 
+            max-height: 0; 
+            margin-top: 0; 
+        }
+
+
+        .filter-button, .tag-filter-button { padding: 0.5rem 1rem; border-radius: 0.375rem; font-family: 'Proxima Nova', 'Inter', sans-serif; font-weight: 500; cursor: pointer; transition: background-color 0.2s, color 0.2s, border-color 0.2s; border: 1px solid var(--brafton-basic-gray); background-color: var(--brafton-pale); color: #2c3f4a; }
+        .filter-button:hover, .tag-filter-button:hover { background-color: var(--brafton-basic-gray); border-color: #A0A2A3; }
+        .filter-button.active { background-color: var(--brafton-ocean); color: white; border-color: var(--brafton-storm); } 
+        
+        .tag-filter-button { background-color: var(--brafton-foam); color: var(--brafton-ocean); border-color: #A5DDE5; }
+        .tag-filter-button.active { background-color: var(--brafton-cristaline); color: white; border-color: #088A96; }
+
+        #search-use-case, #search-email-library { 
+            padding: 0.625rem 0.75rem; 
+            border-radius: 0.375rem; 
+            border: 1px solid var(--brafton-basic-gray); 
+            width: 100%; 
+            font-size: 0.875rem; 
+            color: #2c3f4a; 
+            margin-top: 0.5rem; 
+        }
+        #search-use-case::placeholder, #search-email-library::placeholder { color: var(--brafton-charcoal); opacity: 0.7; }
+
+        .accordion-item { margin-bottom: 1.5rem; border-radius: 0.75rem; overflow: hidden; border: 1px solid var(--brafton-pale); }
+        .accordion-header { /* For Deal Stage accordions */
+            background-color: var(--brafton-light-pale); 
+            padding: 1rem 1.5rem; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-family: 'Proxima Nova', 'Inter', sans-serif; 
+            font-weight: 700; 
+            font-size: 1.125rem; 
+            color: #2c3f4a; 
+            border-bottom: 1px solid var(--brafton-pale); 
+        }
+        .accordion-header:hover { background-color: var(--brafton-pale); }
+        .accordion-header.active { background-color: var(--brafton-ocean); color: white; border-bottom-color: var(--brafton-storm); }
+        .accordion-header .arrow { transition: transform 0.3s ease; font-size: 1.25rem; }
+        .accordion-header.active .arrow { transform: rotate(90deg); }
+        .accordion-content { padding: 0; background-color: white; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .accordion-content.active { padding: 1rem; } /* Padding around the grid container */
+        
+        /* Recently Used Section Styling */
+        .recently-used-toggle {
+            font-family: 'Proxima Nova', 'Inter', sans-serif; 
+            font-size: 1.25rem; 
+            font-weight: 600; 
+            color: var(--brafton-ink); 
+            margin-bottom: 1.5rem; /* Same as sub-section-title */
+            padding-bottom: 0.5rem; /* Same as sub-section-title */
+            border-bottom: 1px solid var(--brafton-basic-gray); /* Same as sub-section-title */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+         .recently-used-toggle .arrow { 
+            margin-left: 0.5rem; /* Space between title and arrow */
+            transition: transform 0.2s ease-in-out; 
+            font-size: 0.8em; 
+         }
+         .recently-used-toggle .arrow.collapsed { transform: rotate(-90deg); }
+         .recently-used-toggle .toggle-text { 
+            font-size: 0.8em;
+            margin-left: 0.35rem;
+            color: var(--brafton-ocean);
+            font-weight: 500;
+        }
+        .recently-used-grid-container {
+            max-height: 1000px; /* Set a large max-height for expanded state */
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, margin-top 0.3s ease-out;
+            margin-top: 0; /* No margin when expanded */
+        }
+        .recently-used-grid-container.collapsed {
+            max-height: 0;
+            margin-top: 0;
+        }
+
+
+        .tips-section { margin-top: 3rem; }
+        .tips-main-accordion-item { background-color: white; border-radius: 0.75rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07); margin-bottom: 1.5rem; overflow: hidden; border: 1px solid var(--brafton-pale); }
+        .tips-main-accordion-header { font-family: 'Proxima Nova', 'Inter', sans-serif; font-size: 1.125rem; font-weight: 700; color: #2c3f4a; padding: 1rem 1.5rem; border-bottom: 1px solid var(--brafton-pale); cursor: pointer; display: flex; justify-content: space-between; align-items: center; background-color: var(--brafton-light-pale); }
+        .tips-main-accordion-header:hover { background-color: var(--brafton-pale); }
+        .tips-main-accordion-header.active { background-color: var(--brafton-coral); color: #2c3f4a; border-bottom-color: #5ABBC3; }
+        .tips-main-accordion-header .arrow { transition: transform 0.3s ease; font-size: 1.25rem; } 
+        .tips-main-accordion-header.active .arrow { transform: rotate(90deg); }
+        .tips-main-accordion-content { padding: 0; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+        .tips-main-accordion-content.active { padding: 1.5rem; }
+        .tips-main-accordion-content h4 { font-family: 'Proxima Nova', 'Inter', sans-serif; font-size: 1.125rem; font-weight: 700; color: var(--brafton-ink); margin-top: 1rem; margin-bottom: 0.5rem; }
+        .tips-main-accordion-content p, .tips-main-accordion-content ul { color: #2c3f4a; line-height: 1.6; }
+        .tips-main-accordion-content ul { margin-top: 0.5rem; }
+
+        .tips-sub-accordion-item { border: 1px solid var(--brafton-pale); border-radius: 0.5rem; margin-bottom: 0.75rem; background-color: var(--brafton-light-pale); }
+        .tips-sub-accordion-header { padding: 0.75rem 1rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-family: 'Proxima Nova', 'Inter', sans-serif; font-weight: 600; color: var(--brafton-ink); border-radius: 0.5rem; transition: background-color 0.2s; }
+        .tips-sub-accordion-header:hover { background-color: var(--brafton-pale); }
+        .tips-sub-accordion-header.active { background-color: var(--brafton-ocean); color: white; border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+        .tips-sub-accordion-header .arrow { transition: transform 0.3s ease; font-size: 1rem; }
+        .tips-sub-accordion-header.active .arrow { transform: rotate(90deg); }
+        .tips-sub-accordion-content { padding: 0; background-color: var(--brafton-light-pale); max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; border-top: 1px solid transparent; border-radius: 0 0 0.5rem 0.5rem; }
+        .tips-sub-accordion-content.active { padding: 1rem; }
+        .tips-sub-accordion-header.active + .tips-sub-accordion-content { border-top: 1px solid #2b757c; }
+        
+        .empty-state-message { text-align: center; padding: 2rem; color: var(--brafton-charcoal); background-color: white; border: 1px dashed var(--brafton-basic-gray); border-radius: 0.75rem; margin-top: 1rem; }
+        .recently-used-container .card { border-left: 4px solid var(--brafton-sunrise); }
+        .hidden { display: none; }
+        .visually-hidden { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
+        .tips-main-accordion-content code, .tips-sub-accordion-content code { background-color: var(--brafton-pale); color: #C75200; padding: 0.1em 0.4em; border-radius: 0.25em; font-family: monospace; font-size: 0.85em; }
+
+        /* Email Library Specific Styles */
+        .email-library-card {
+           border-left: 4px solid var(--brafton-coral); 
+           margin-bottom: 1.5rem;
+        }
+        .email-library-card h3 { /* Subject Line */
+            font-size: 1.25rem; 
+            font-weight: 700;
+            color: var(--brafton-ink);
+            margin-bottom: 0.5rem;
+        }
+         .email-library-card .use-case-label {
+           display: inline-block;
+           background-color: var(--brafton-pale);
+           color: var(--brafton-ink);
+           font-size: 0.75rem;
+           font-weight: 500;
+           padding: 0.25rem 0.6rem;
+           border-radius: 0.25rem;
+           margin-bottom: 0.75rem;
+         }
+        .email-library-card .email-body-preview {
+            font-size: 0.9rem;
+            color: #4b5563; 
+            margin-bottom: 1rem;
+            max-height: 4.5em; /* Approx 3 lines of text */
+            overflow: hidden;
+            position: relative;
+            line-height: 1.5; 
+        }
+        .email-library-card .email-body-preview::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1.5em;
+            background: linear-gradient(to bottom, transparent, white);
+        }
+        .email-library-card .card-actions {
+            display: flex;
+            justify-content: flex-end; 
+            align-items: center;
+            flex-wrap: wrap; 
+            gap: 0.5rem;
+            margin-top: 0.5rem; 
+        }
+        .email-library-card .view-full-button {
+            background: none;
+            border: none;
+            color: var(--brafton-ocean);
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.875rem;
+            padding: 0.25rem 0; 
+        }
+         .email-library-card .view-full-button:hover {
+           color: var(--brafton-storm);
+         }
+
+        /* --- Modal Styles (Shared & Specific) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; 
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 1rem; /* Add padding for smaller screens */
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        /* Base modal content styling */
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            max-width: 95%; /* Adjust max-width */
+            width: 800px; /* Increase width for side-by-side */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+            max-height: 90vh; /* Adjust max height */
+            display: flex; 
+            flex-direction: column;
+            overflow: hidden; /* Prevent content overflow before body scrolls */
+        }
+        /* Modal Header Styling */
+        .modal-header { 
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align items top */
+            border-bottom: 1px solid var(--brafton-pale);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+        .modal-title-area { /* Container for title */
+             flex-grow: 1; 
+             margin-right: 1rem; 
+        }
+        .modal-title { /* Use case / Subject */
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--brafton-ink);
+            margin-bottom: 0; 
+            line-height: 1.3;
+        }
+        .modal-copy-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-shrink: 0; 
+            align-items: center; /* Align buttons vertically */
+        }
+         .modal-copy-buttons .copy-button { 
+           margin-top: 0; /* Remove default margin */
+           margin-bottom: 0; /* Remove default margin */
+           padding: 0.4rem 0.8rem; /* Slightly smaller padding */
+           font-size: 0.8rem; /* Slightly smaller font */
+         }
+        /* Modal Body Styling */
+        .modal-body {
+           overflow-y: auto; /* Enable scrolling for the body */
+           flex-grow: 1; /* Allow body to take remaining space */
+           line-height: 1.6;
+           color: #2c3f4a;
+        }
+         .modal-body p { margin-bottom: 1em; }
+         .modal-body ul { margin-left: 1.5em; margin-bottom: 1em; list-style: disc; padding-left: 0.5em; } 
+         .modal-body li { margin-bottom: 0.5em; }
+
+        /* Template Modal Specific Body Styling */
+        #template-modal-body {
+            display: flex;
+            gap: 1.5rem; /* Space between panels */
+            flex-direction: row; /* Default side-by-side */
+        }
+        /* Responsive stacking for template modal panels */
+        @media (max-width: 768px) {
+            #template-modal-body {
+                flex-direction: column; /* Stack panels vertically */
+                gap: 1rem;
+            }
+            .modal-content { /* Adjust modal width for smaller screens */
+                 width: 95%;
+            }
+        }
+
+        .template-panel, .prompt-panel {
+            flex: 1; /* Each panel takes half the space */
+            min-width: 0; /* Prevent flex item overflow */
+            border: 1px solid var(--brafton-pale);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            background-color: var(--brafton-light-pale);
+            max-height: calc(85vh - 100px); /* Approximate max height, adjust as needed */
+            overflow-y: auto; /* Allow individual panel scrolling */
+        }
+        .panel-title {
+            font-weight: 600;
+            color: var(--brafton-ink);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Email Library Modal Specific Body Styling */
+        #email-modal-body {
+            font-size: 0.95rem; /* Keep original font size */
+        }
+
+        /* Close Button Styling */
+        .modal-close-button {
+            position: absolute;
+            top: 0.75rem; 
+            right: 0.75rem;
+            background: none;
+            border: none;
+            font-size: 1.75rem; 
+            line-height: 1;
+            cursor: pointer;
+            color: var(--brafton-basic-gray);
+            padding: 0.25rem;
+            z-index: 10; /* Ensure it's above header content */
+        }
+        .modal-close-button:hover {
+            color: var(--brafton-charcoal);
+        }
+
+        /* Copy Notification */
+        #copy-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--brafton-ocean); /* Use a distinct color */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            z-index: 1100; /* Above modal overlay */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+        }
+        #copy-notification.show {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease, visibility 0s linear 0s;
+        }
+
+
+    </style>
+</head>
+<body>
+    <header class="top-header">
+        <button class="hamburger-toggle" id="sidebar-toggle-button" aria-label="Toggle sidebar">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+        <span class="top-header-logo-text">BRAFTON</span>
+    </header>
+
+    <aside class="sidebar" id="sidebar">
+        <nav id="sidebar-nav">
+            <a href="#" data-section="template-bank" class="active">
+                <span class="nav-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6.414A2.25 2.25 0 0 0 17.414 5L13 1.586A2.25 2.25 0 0 0 11.586 1H6a2 2 0 0 0-2 2Zm6 5a.75.75 0 0 1 .75.75v1.5h1.5a.75.75 0 0 1 0 1.5h-1.5v1.5a.75.75 0 0 1-1.5 0v-1.5h-1.5a.75.75 0 0 1 0-1.5h1.5v-1.5A.75.75 0 0 1 10 7Z" clip-rule="evenodd" /></svg>
+                </span> 
+                <span class="nav-text">Templates</span>
+            </a>
+            <a href="#" data-section="email-library-section">
+                <span class="nav-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a2 2 0 0 0-2 2v1.161l8.441 4.221a1.25 1.25 0 0 0 1.118 0L19 7.162V6a2 2 0 0 0-2-2H3Z"/><path d="M19 8.839l-7.77 3.885a2.75 2.75 0 0 1-2.46 0L1 8.839V14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.839Z"/></svg>
+                </span> 
+                <span class="nav-text">Email Library</span>
+            </a>
+        </nav>
+    </aside>
+    
+    <main class="main-content" id="main-content">
+        <div class="container mx-auto"> 
+            
+            <section id="template-bank" class="main-section">
+                <header class="mb-12 text-center">
+                    <h1 class="page-title">Brafton Sales Follow-Up Bank</h1>
+                    <p class="text-lg mt-2" style="color: #344754; font-family: 'Proxima Nova', 'Inter', sans-serif;">Streamline your sales process with targeted email templates and LLM prompts.</p>
+                </header>
+                
+                <div class="filter-controls-wrapper"> 
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <span class="filter-group-label">Deal Stage:</span>
+                            <div id="deal-stage-filters" class="flex flex-wrap gap-2"></div>
+                        </div>
+                        <div class="filter-group">
+                            <span class="filter-group-label" id="tags-filter-toggle">
+                                Tags <span class="arrow collapsed">&#x25B8;</span> 
+                                <span class="toggle-text" id="tags-toggle-text">[Show]</span>
+                            </span>
+                            <div id="tag-filters-container" class="flex flex-wrap gap-2 collapsed"></div>
+                        </div>
+                        <input type="text" id="search-use-case" placeholder="Search templates by use case or keywords..." class="w-full">
+                    </div>
+                </div>
+
+                <section id="recently-used-section" class="mb-12 mt-4"> 
+                    <div id="recently-used-toggle" class="recently-used-toggle"> <span>Recently Used Templates</span>
+                         <span class="arrow collapsed">&#x25B8;</span> 
+                         <span class="toggle-text" id="recently-used-toggle-text">[Show]</span>
+                    </div>
+                    <div id="recently-used-grid-container" class="recently-used-grid-container collapsed"> 
+                        </div>
+                </section>
+
+                <h2 class="section-title">Deal Stages</h2>
+                <div id="email-templates-accordion-container"></div>
+                <div id="empty-state-container" class="hidden"></div>
+            </section>
+
+            <section id="email-library-section" class="main-section hidden">
+                <header class="mb-12 text-center">
+                    <h1 class="page-title">Email Library</h1>
+                    <p class="text-lg mt-2" style="color: #344754; font-family: 'Proxima Nova', 'Inter', sans-serif;">Ready-to-use emails for common sales scenarios.</p>
+                </header>
+                
+                <div class="filter-controls-wrapper"> 
+                    <div class="filter-controls">
+                        <div class="filter-group">
+                            <span class="filter-group-label" id="email-library-tags-filter-toggle">
+                                Tags <span class="arrow collapsed">&#x25B8;</span> 
+                                <span class="toggle-text" id="email-library-tags-toggle-text">[Show]</span>
+                            </span>
+                            <div id="email-library-tag-filters-container" class="flex flex-wrap gap-2 collapsed"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="email-library-content"></div>
+                <div id="email-library-empty-state" class="hidden">
+                    <div class="empty-state-message">No emails found matching the selected filters.</div>
+                </div>
+            </section>
+
+            <section id="implementation-tips" class="mb-12 tips-section">
+                 <h2 class="section-title">Implementation Tips</h2>
+                 <p class="mb-6" style="color: #2c3f4a;">This email bank is a powerful tool, but its effectiveness hinges on strategic use and smart execution. Here’s how DSAMs can maximize its value:</p>
+ 
+                 <div class="tips-main-accordion-item">
+                     <div class="tips-main-accordion-header">
+                         <span>Choosing the Right Template</span>
+                         <span class="arrow">&#x276F;</span>
+                     </div>
+                     <div class="tips-main-accordion-content">
+                         <ul>
+                             <li><strong>Assess the Deal Stage:</strong> Start by filtering templates based on where the prospect is in the sales cycle (Lead Assigned, Discovery Complete, Proposal Delivered).</li>
+                             <li><strong>Identify the Goal:</strong> What specifically are you trying to achieve with this follow-up? Are you trying to book the first meeting, clarify a detail, reinforce value, create urgency, or get a decision? Match the template's Use Case to your goal.</li>
+                             <li><strong>Consider the Context:</strong> What happened or didn't happen since the last interaction? Did they mention a specific challenge? Ask a question? Go quiet after receiving a proposal? Select a template that is hyper-relevant to this specific context. A "Process Walkthrough" is great if they asked about methodology; a "Case Study Snapshot" works well if they doubted achievable results for their pain point.</li>
+                             <li><strong>Read the Room:</strong> Is the prospect generally responsive but busy? Use a concise value-add or Executive Brief recap. Have they gone completely dark? A "Break-up" might be appropriate after other attempts fail.</li>
+                         </ul>
+                     </div>
+                 </div>
+ 
+                 <div class="tips-main-accordion-item">
+                     <div class="tips-main-accordion-header">
+                         <span>Feeding Context into the LLM Prompt</span>
+                         <span class="arrow">&#x276F;</span>
+                     </div>
+                     <div class="tips-main-accordion-content">
+                         <p class="mb-4">The LLM prompt is your key to scaling personalization. Don't just copy the template; use the prompt to instruct the AI.</p>
+                         <div class="tips-sub-accordion-item">
+                             <div class="tips-sub-accordion-header">
+                                 <span>Gather Your Inputs</span>
+                                 <span class="arrow">&#x276F;</span>
+                             </div>
+                             <div class="tips-sub-accordion-content">
+                                 <p class="mb-2">Before pasting the prompt, have the necessary information ready:</p>
+                                 <ul>
+                                     <li>Prospect's first name and company name.</li>
+                                     <li>Specific pain points or goals discussed (from CRM notes or call recordings).</li>
+                                     <li>Specific questions or objections they raised.</li>
+                                     <li>Details about the last interaction (date, topics covered).</li>
+                                     <li>Relevant details from the proposal, if applicable (key challenge, specific outcomes).</li>
+                                     <li>A chosen Brafton case study, metric, resource link, or specific process detail relevant to the template.</li>
+                                     <li>Any recent, relevant industry news or competitive insights.</li>
+                                     <li>The desired CTA (e.g., a link to your calendar, a specific question asking for a reply).</li>
+                                 </ul>
+                             </div>
+                         </div>
+                         <div class="tips-sub-accordion-item">
+                             <div class="tips-sub-accordion-header">
+                                 <span>Be Specific in the Prompt</span>
+                                 <span class="arrow">&#x276F;</span>
+                             </div>
+                             <div class="tips-sub-accordion-content">
+                                 <p>When using the prompt with an LLM, replace the bracketed instructions (like <code>{{Prospect_Industry}}</code>, <code>{{Pain_Point}}</code>, <code>{{Metric}}</code>, <code>{{Specific_Question_or_Objection}}</code>) with the actual details from your notes. The more specific you are, the better the LLM can tailor the language naturally. For example, instead of just <code>{{Pain_Point}}</code>, write "the challenge of proving ROI for content marketing campaigns."</p>
+                             </div>
+                         </div>
+                         <div class="tips-sub-accordion-item">
+                             <div class="tips-sub-accordion-header">
+                                 <span>Review and Edit</span>
+                                 <span class="arrow">&#x276F;</span>
+                             </div>
+                             <div class="tips-sub-accordion-content">
+                                 <p>Always read the LLM-generated draft before sending. Ensure it flows well, accurately reflects the context, and sounds like you (or the desired Brafton voice). Make minor tweaks for perfect clarity and tone.</p>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+ 
+                 <div class="tips-main-accordion-item">
+                     <div class="tips-main-accordion-header">
+                         <span>Tracking Performance</span>
+                         <span class="arrow">&#x276F;</span>
+                     </div>
+                     <div class="tips-main-accordion-content">
+                         <ul>
+                             <li><strong>Standard Metrics:</strong> Track open rates, click rates, and reply rates for these emails in your CRM or sales engagement platform.</li>
+                             <li><strong>Key Metric - Reply Rate:</strong> The most important indicator for follow-up emails is the reply rate. Are these emails prompting prospects to engage?</li>
+                             <li><strong>Deal Progression:</strong> Monitor if using these value-led follow-ups correlates with higher conversion rates to the next deal stage or shorter sales cycles compared to generic follow-ups.</li>
+                             <li><strong>Qualitative Feedback:</strong> Pay attention to how prospects reply. Do they acknowledge the value? Do they answer the specific question? This feedback helps you understand which types of value resonate most.</li>
+                             <li><strong>A/B Testing (Optional but Recommended):</strong> If your tools allow, test variations of subject lines or CTAs within the same template type to optimize performance.</li>
+                             <li><strong>Document Successes:</strong> Note which specific templates and use cases worked for particular prospect scenarios. Share these insights with the team during sales meetings to build collective intelligence.</li>
+                         </ul>
+                     </div>
+                 </div>
+                 <p class="mt-6 text-center" style="color: #2c3f4a;">By treating each follow-up as an opportunity to provide targeted value, guided by these templates and personalized with LLMs, DSAMs can transform a common sales challenge into a competitive advantage, fostering stronger relationships and driving deals forward more effectively.</p>
+            </section>
+        </div>
+    </main>
+
+    <div id="email-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <button id="email-modal-close-button" class="modal-close-button" aria-label="Close modal">&times;</button>
+            <div class="modal-header">
+                <div class="modal-title-area">
+                    <h3 id="email-modal-subject" class="modal-title"></h3>
+                </div>
+                <div class="modal-copy-buttons" id="email-modal-copy-buttons"></div>
+            </div>
+            <div id="email-modal-body" class="modal-body"></div>
+        </div>
+    </div>
+
+    <div id="template-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+             <button id="template-modal-close-button" class="modal-close-button" aria-label="Close modal">&times;</button>
+             <div class="modal-header">
+                 <div class="modal-title-area">
+                     <h3 id="template-modal-title" class="modal-title"></h3>
+                 </div>
+                 <div class="modal-copy-buttons">
+                     <button id="template-modal-copy-template-button" class="copy-button">Copy Template</button>
+                     <button id="template-modal-copy-prompt-button" class="copy-button">Copy Prompt</button>
+                 </div>
+             </div>
+             <div id="template-modal-body" class="modal-body">
+                 <div class="template-panel">
+                     <h4 class="panel-title">Email Template</h4>
+                     <div id="template-modal-template-content"></div>
+                 </div>
+                 <div class="prompt-panel">
+                     <h4 class="panel-title">LLM Prompt</h4>
+                     <div id="template-modal-prompt-content"></div>
+                 </div>
+             </div>
+        </div>
+     </div>
+
+    <div id="copy-notification" class="">Copied!</div>
+
+
+    <script>
+        // --- Data Definitions ---
+        const CORE_TAGS = [ 
+            "breakup", "budget", "case-study", "objection-handling", 
+            "post-proposal", "team-intro", "idea-sharing", "resource-sharing"
+        ]; 
+
+        // Data for Email Templates (Content Restored & Stages Renamed)
+        const emailTemplateData = [
+            {
+                id: "lead-industry-news",
+                dealStage: "Pre-demo", // MODIFIED HERE
+                useCase: "Industry news or regulatory update tied to prospect’s role/goals",
+                tags: [], 
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nSaw this article on [Specific Industry Trend/Regulation] that made me think of {{Prospect_Company}}.\n\nWith [Brief Implication of Trend], many {{Prospect_Industry}} companies are grappling with [Challenge related to Trend, e.g., staying compliant, reaching shifting audiences].\n\nWe recently helped [Similar Company Type] navigate a similar shift by [Briefly mention Brafton approach, e.g., implementing a new content strategy, updating website compliance], resulting in {{Metric, e.g., a 15% increase in qualified leads}}.\n\nDoes tackling [Challenge related to Trend] feel like a priority for you this quarter? Happy to share how we're advising others in your space.",
+                llmPrompt: "Personalize this template for a prospect in the {{Prospect_Industry}} industry.\nInclude their first name and company name.\nFind a recent, relevant industry trend or regulatory update specific to their sector and briefly explain its implication.\nIdentify a challenge this trend likely creates for companies like theirs.\nSelect a relevant metric or result from a Brafton case study or general experience that shows how we've helped similar companies address such challenges.\nEnsure the tone is helpful and insightful."
+            },
+            {
+                id: "lead-case-study-intro",
+                dealStage: "Pre-demo", // MODIFIED HERE
+                useCase: "Measurable case-study snapshot (introductory)",
+                tags: ["case-study"],
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nResearching {{Prospect_Company}}, I noticed your focus on [Specific Company Initiative/Goal seen online].\n\nThat reminded me of how we partnered with [Similar Company Name/Type] who were also focused on [Similar Goal]. They needed to [Their Pain Point] and by implementing [Brief Description of Brafton Service, e.g., our technical SEO program], they saw results like {{Metric, e.g., a 210% increase in organic traffic within 6 months}}.\n\nOur approach focused on [1-2 key activities, e.g., resolving core web vital issues and building topical authority].\n\nWould you be open to a brief 15-minute call next week to explore if a similar approach could support your work on [Specific Company Initiative/Goal]? {{Next_Step_CTA, e.g., Book time here [Link] or suggest a time?}}",
+                llmPrompt: "Customize this template for a prospect who hasn't met yet.\nInsert their first name and company name.\nIdentify a public initiative or stated goal of their company.\nFind a Brafton case study (or internal data point) with a strong metric from a similar company or project.\nBriefly describe the client's pain point and the Brafton service used.\nMention 1-2 core activities.\nEnsure the metric is clearly stated.\nConclude with a low-friction call to action to book a short meeting, including a placeholder for a link or suggestion."
+            },
+            {
+                id: "lead-tradeshow",
+                dealStage: "Pre-demo", // MODIFIED HERE
+                useCase: "Tradeshow shout-out & value add",
+                tags: ["resource-sharing"], 
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nGreat connecting briefly at [Tradeshow Name] last week! I enjoyed hearing your perspective on [Specific Topic Discussed Briefly].\n\nYou mentioned [Specific challenge or interest]. We've found that many companies in {{Prospect_Industry}} tackling [Challenge/Interest] benefit from [Specific Brafton resource type, e.g., our guide to content atomization or a quick audit checklist].\n\nHere's a link: [Link to Resource].\n\nHope it's helpful as you think about [Specific Challenge/Interest]. If you'd like to chat more about how others are approaching this, feel free to book 15 minutes here: {{Next_Step_CTA, e.g., [Link to calendar]}}.",
+                llmPrompt: "Personalize this template for a prospect met at a specific tradeshow.\nInclude their first name.\nMention the tradeshow name and briefly reference a specific topic discussed or something learned about their interest/challenge.\nIdentify a relevant Brafton resource (blog post, guide, checklist, tool) that directly addresses that interest/challenge.\nInsert a placeholder for the resource link.\nEnsure the tone is friendly and helpful.\nInclude a low-friction CTA to book time."
+            },
+            {
+                id: "lead-value-add-type-role",
+                dealStage: "Pre-demo", // MODIFIED HERE
+                useCase: "Value add based on company type/role",
+                tags: [], 
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nGiven {{Prospect_Company}}'s focus as [Specific Company Type, e.g., a B2B SaaS scaling in competitive markets], I thought you might find this insight interesting: [Brief, specific insight about their company type/industry, e.g., \"SEO authority building is key but often overlooked in early growth stages,\" or \"LinkedIn organic is proving highly effective for reaching technical buyers right now\"].\n\nWe specialize in helping [Specific Company Type] like yours navigate challenges such as {{Pain_Point_Type, e.g., breaking through competitive noise, efficiently generating demand}}.\n\nOur framework for [Specific Brafton process/service] has consistently helped clients achieve {{Metric, e.g., 2x lead-to-SQL conversion rates}}.\n\nWould you be open to a quick chat to see if any of our approaches resonate? {{Next_Step_CTA, e.g., Reply to find 15 mins.}}",
+                llmPrompt: "Customize this template for a prospect based on their company type, industry, or role, even with limited prior interaction.\nInsert their first name and company name.\nState their company type or focus.\nProvide a brief, specific, relevant insight about that company type/industry/role.\nConnect this insight to a common pain point (placeholder).\nBriefly mention a relevant Brafton service or process and a general metric we help clients achieve.\nEnsure the tone is knowledgeable and value-focused.\nInclude a clear, low-commitment CTA."
+            },
+            {
+                id: "lead-close-file-early",
+                dealStage: "Pre-demo", // MODIFIED HERE
+                useCase: "\"Permission to close your file\" (early stage)",
+                tags: ["breakup"],
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nI've tried reaching out a few times regarding how Brafton helps [Specific Company Type/Industry] like {{Prospect_Company}} with [High-Level Benefit, e.g., scaling organic demand generation]. My goal was to explore if there was a potential fit for a brief conversation.\n\nSince I haven't heard back, I understand timing might not be right or perhaps there isn't a need.\n\nI'll plan to close your file for now.\n\nIf your priorities shift or something changes down the line, please feel free to reach out.\n\nBest regards,\n[Your Name]",
+                llmPrompt: "Adapt this template for a prospect who hasn't responded to multiple attempts to book an initial meeting.\nInsert their first name and company name.\nBriefly state the high-level purpose of your outreach (what Brafton helps companies like theirs achieve).\nClearly state the intention to close their file due to lack of response, while leaving the door open for future contact.\nKeep the tone professional and respectful.\nEnsure it is very concise."
+            },
+            {
+                id: "discovery-case-study-pain",
+                dealStage: "Post-demo", // MODIFIED HERE
+                useCase: "Measurable case-study snapshot (relevant to pain)",
+                tags: ["case-study"],
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nFollowing up on our conversation last week, particularly around {{Pain_Point, e.g., the challenge of demonstrating content ROI}}, I wanted to share a quick snapshot relevant to that.\n\n[Client Name], a company facing a similar hurdle with {{Similar_Pain_Point}}, partnered with us to implement [Specific Brafton Service tied to solution].\n\nBy focusing on [1-2 key activities, e.g., mapping content to the buyer journey and implementing better tracking], they achieved {{Metric, e.g., a 300% lift in marketing-sourced pipeline value within a year}}.\n\nThis required [Briefly mention effort/investment type, e.g., a strategic approach to analytics integration and close sales-marketing alignment].\n\nDoes seeing how [Client Name] tackled {{Similar_Pain_Point}} resonate with your situation? Happy to walk you through more specifics.",
+                llmPrompt: "Personalize this template based on a specific pain point discussed during discovery.\nInsert the prospect's first name.\nClearly state the pain point discussed.\nSelect a Brafton case study where a client had a similar pain point and achieved strong, relevant metrics.\nName the client (if possible, or describe anonymously), the Brafton service used, and 1-2 key activities.\nClearly state the metric achieved.\nAdd a sentence acknowledging the effort involved.\nAsk if the case study resonates and offer to share more details."
+            },
+            {
+                id: "discovery-process-walkthrough",
+                dealStage: "Post-demo", // MODIFIED HERE
+                useCase: "Process walkthrough answering a prospect’s specific question/objection",
+                tags: ["objection-handling"], 
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nYou asked during our last call about {{Specific_Question_or_Objection, e.g., how we ensure content stays aligned with evolving SEO best practices}} or {{Specific_Question_or_Objection, e.g., how your team integrates with internal SMEs for technical topics}}. Great question!\n\nHere’s a quick overview of how that typically works:\n* **[Step 1, e.g., Ongoing SEO monitoring]:** Our strategists use tools to track algorithm updates and competitor moves, briefing your content team weekly.\n* **[Step 2, e.g., Dedicated SME liaison]:** We assign a specific strategist to work directly with your SMEs, using a structured brief process to capture their expertise efficiently.\n* **[Step 3, e.g., Content review loop]:** Drafts include specific points for SME validation, ensuring technical accuracy before finalization.\n\nThis process is designed to be low-impact on your SMEs' time while ensuring accuracy and relevance. Does this approach align with what you were hoping for?",
+                llmPrompt: "Customize this template to answer a specific question or objection raised by the prospect during the discovery call.\nInsert their first name.\nClearly state the question or objection you are addressing.\nOutline 2-3 specific, concrete steps in the Brafton process that directly address the prospect's concern. Use bullet points for scanability.\nExplain briefly *why* this process works or benefits the prospect (e.g., low SME time commitment).\nConclude with a question to confirm if this explanation was helpful or sufficient."
+            },
+            {
+                id: "discovery-team-intro-offer",
+                dealStage: "Post-demo", // MODIFIED HERE
+                useCase: "Team-introduction offer (pre-assigning AM squad)",
+                tags: ["team-intro"],
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nBased on our discussion about {{Specific_Need_or_Goal, e.g., the need for strong technical SEO guidance and efficient content production}}, I've already identified key Brafton team members who would likely support {{Prospect_Company}} should we move forward.\n\n[Name 1], our [Role 1, e.g., Lead SEO Strategist], would oversee [Their Responsibility, e.g., technical audits and performance tracking].\n[Name 2], our [Role 2, e.g., Senior Content Strategist], would manage day-to-day strategy and workflow, ensuring content ties directly to your goals.\n\nWe structure teams this way to provide direct access to specialists who understand your unique needs.\n\nWould it be helpful to have a brief 15-minute introduction with them next week so you can hear directly how they envision supporting your objectives? {{Next_Step_CTA, e.g., Let me know what day/time works.}}",
+                llmPrompt: "Personalize this template for a prospect post-discovery, before a proposal is delivered (or reviewed).\nInsert their first name and company name.\nReference a specific need or goal discussed.\nIdentify 2-3 likely Brafton team members by name and role who would work on their account.\nBriefly describe each person's responsibility in the context of the prospect's needs.\nExplain the value of this team structure (specialized access).\nPropose a low-friction introduction meeting, including a placeholder for scheduling."
+            },
+            {
+                id: "discovery-exec-brief-champions",
+                dealStage: "Post-demo", // MODIFIED HERE
+                useCase: "Executive brief recap (for champions presenting up)",
+                tags: [], 
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nHope your week is going well.\n\nFollowing up on our call and knowing you might be discussing this internally, I've put together a very brief summary of the key challenge we discussed and how our approach could help, tailored for an executive audience.\n\n**The Challenge:** {{Concise summary of the main pain point discussed, e.g., Lack of scalable, high-converting organic lead generation}}.\n\n**Our Proposed Approach (Brafton):** {{1-2 sentences on Brafton's core solution focus, e.g., Implementing a data-driven content strategy mapped to buyer intent and technical SEO improvements.}}.\n\n**Expected Outcome:** {{1-2 sentences on the potential high-level benefit/metric, e.g., Predictable increase in qualified organic pipeline and improved website authority.}}.\n\nPlease feel free to copy/paste or adapt any of this summary for your internal discussions. Let me know if any points need clarification!",
+                llmPrompt: "Create a concise executive summary template based on a recent discovery conversation.\nInsert the prospect's first name.\nProvide placeholders for a very concise summary of the main challenge discussed, a brief description of Brafton's proposed solution focus, and the expected high-level outcome or benefit (ideally tied to a business metric).\nFrame this email as providing a resource for internal discussions.\nKeep it extremely brief and high-level."
+            },
+            {
+                id: "discovery-value-add-competitive",
+                dealStage: "Post-demo", // MODIFIED HERE
+                useCase: "Value add based on competitive landscape",
+                tags: ["idea-sharing"], 
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nGiven our conversation and {{Prospect_Company}}'s position in the market, I found this data point interesting: [Specific stat about their industry or competitors, e.g., \"Content consumption on Topic X increased 40% in the last 6 months within the {{Prospect_Industry}} sector\"] or [Specific competitor activity, e.g., \"Noticed Competitor Y recently launched a significant resource hub focused on [Topic]\"].\n\nThis aligns with what we discussed regarding {{Related_Pain_Point, e.g., the need to establish stronger authority in Topic X}}.\n\nOur strategy for [Briefly mention relevant Brafton strategy, e.g., creating pillar content and targeted topic clusters] helps clients like [Similar client type] capture this demand, leading to {{Metric, e.g., significant increases in search visibility for core terms}}.\n\nIs staying ahead of these shifts a key consideration for you right now?",
+                llmPrompt: "Generate a template focused on competitive or market insights relevant to the prospect's industry and the discovery conversation.\nInsert the prospect's first name and company name.\nFind a specific data point about their industry, market trends, or competitor activity.\nTie this insight back to a pain point or need discussed during discovery.\nBriefly mention a relevant Brafton strategy or service and a corresponding metric or outcome.\nAsk a question to gauge their current focus on this area."
+            },
+            {
+                id: "discovery-technical-concern",
+                dealStage: "Post-demo", // MODIFIED HERE
+                useCase: "Addressing a specific technical point or concern",
+                tags: ["objection-handling"], 
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nThinking back on our chat and your question about {{Specific_Technical_Concern, e.g., how our content creation process handles complex technical reviews}}, I wanted to elaborate slightly.\n\nOur {{Relevant_Brafton_Process_or_Role, e.g., Senior Editorial team or technical review step}} is specifically designed to integrate input from [Who provides input, e.g., client SMEs or third-party experts] early in the drafting process.\n\nWe use [Specific mechanism, e.g., detailed briefs with required fact-checking points or collaborative editing tools] to ensure accuracy and technical depth without creating significant burden on your team.\n\nThis was a key factor in helping [Similar client type] confidently publish content on [Complex Topic], resulting in {{Metric, e.g., a 25% reduction in review cycles}}.\n\nDoes this clarification address your concern about {{Specific_Technical_Concern}}?",
+                llmPrompt: "Customize this template to address a specific technical question or concern raised by the prospect during discovery.\nInsert the prospect's first name.\nClearly state the technical concern.\nExplain *how* a specific Brafton process, role, or mechanism handles this exact issue.\nProvide concrete examples (e.g., what tools or steps are used).\nIf possible, reference how a similar client benefited.\nConclude by asking if the clarification is satisfactory."
+            },
+            {
+                id: "proposal-exec-brief-post",
+                dealStage: "Proposal", // MODIFIED HERE
+                useCase: "Executive-brief recap (post-proposal)",
+                tags: ["post-proposal"], 
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nAs you review the proposal and potentially share it internally, I've distilled the core value proposition into a few points that may be helpful for those who weren't on our calls.\n\n**For {{Prospect_Company}} leadership:** We propose a targeted content and SEO program designed to directly address {{Key_Challenge_from_Proposal}} by focusing on {{1-2 main Brafton strategies/services from proposal}}. The expected impact is {{Specific quantifiable outcome from proposal, e.g., driving X% growth in marketing-qualified leads and improving search authority}}.\n\n**Key Differentiator:** Our approach combines [Unique Brafton aspect 1] and [Unique Brafton aspect 2, e.g., strategic expertise with scalable production via Writer+ and dedicated account teams] to deliver measurable results efficiently.\n\nPlease let me know if any of these points would benefit from further detail for your team.",
+                llmPrompt: "Create an executive summary template specifically for use *after* the proposal has been delivered, designed to help the prospect socialize it internally.\nInsert the prospect's first name and company name.\nSummarize the key challenge the proposal addresses and the 1-2 main Brafton strategies proposed, using language from the proposal.\nState the expected quantifiable outcome(s) from the proposal.\nBriefly highlight 1-2 key differentiators of Brafton's approach mentioned in the proposal.\nFrame it as a resource for their internal discussions."
+            },
+            {
+                id: "proposal-process-walkthrough-clarify",
+                dealStage: "Proposal", // MODIFIED HERE
+                useCase: "Process walkthrough clarifying proposal element",
+                tags: ["post-proposal"], 
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nI know the proposal covers a lot, and you might have questions as you review. One area that sometimes sparks questions is {{Specific_Proposal_Section, e.g., the content ideation process}} or {{Specific_Proposal_Section, e.g., how we handle reporting and performance tracking}}.\n\nTo quickly clarify: Our approach to {{Specific_Proposal_Section}} involves [Step 1 from proposal process, e.g., quarterly strategy sessions to align on topics based on SEO data and business goals].\n\nWe then [Step 2 from proposal process, e.g., develop detailed briefs using competitive analysis and buyer persona insights].\n\nFinally, [Step 3 from proposal process, e.g., topics are approved via a collaborative platform before assignment].\n\nThis ensures all content is strategically aligned from the start. Does that quick walkthrough of {{Specific_Proposal_Section}} make sense? Happy to elaborate on other sections too.",
+                llmPrompt: "Generate a template to proactively clarify a specific section or process described in the delivered proposal.\nInsert the prospect's first name.\nIdentify a specific section of the proposal that might need clarification (e.g., a particular process, a service detail).\nOutline 2-3 brief, sequential steps of that process as described in the proposal.\nFrame it as a quick walkthrough to aid their review.\nConclude by asking if the clarification was helpful and offering to discuss other sections."
+            },
+            {
+                id: "proposal-team-intro-formal",
+                dealStage: "Proposal", // MODIFIED HERE
+                useCase: "Team-introduction offer (formal)",
+                tags: ["team-intro", "post-proposal"],
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nAs you consider the proposal, I wanted to formally introduce the core Brafton team members who would be dedicated to {{Prospect_Company}}'s success from day one.\n\n[Name 1, Role 1]: Your main point of contact for [Responsibility 1].\n[Name 2, Role 2]: Specializes in [Responsibility 2 relevant to proposal].\n[Name 3, Role 3]: Oversees [Responsibility 3 relevant to proposal].\n\nWe've assembled this team based on the specific goals outlined in the proposal to ensure you have direct access to the expertise needed for {{Desired_Outcome_from_Proposal}}.\n\nWould you like to schedule a brief introductory call with the team next week so you can meet them and ask any initial questions? {{Next_Step_CTA, e.g., Reply with your availability.}}",
+                llmPrompt: "Customize this template to formally introduce the proposed Brafton account team *after* the proposal has been delivered.\nInsert the prospect's first name and company name.\nList 2-3 key team members by name and role, briefly stating their primary responsibility as it relates to the proposal's scope and the prospect's desired outcome.\nExplain *why* this specific team is relevant.\nPropose a formal introductory meeting and include a CTA for scheduling."
+            },
+            {
+                id: "proposal-eoq-incentive",
+                dealStage: "Proposal", // MODIFIED HERE
+                useCase: "End-of-quarter incentive / fast-lane contract hook",
+                tags: ["post-proposal"], 
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nHope the proposal review is progressing smoothly.\n\nWith the end of the quarter approaching, we have a limited opportunity for clients looking to kick off engagements quickly.\n\nIf {{Prospect_Company}} is in a position to finalize the agreement by [Specific Date near EoQ], we can offer {{Specific_Incentive, e.g., an accelerated onboarding timeline starting X date, or a complimentary [Specific small service, e.g., initial content audit add-on]}}.\n\nThis would allow us to [Benefit of incentive, e.g., get key foundational work completed before QX, or leverage the add-on value immediately].\n\nPlease let me know if this accelerated path or incentive is of interest as you make your decision.",
+                llmPrompt: "Generate a template for prospects with a proposal delivered, applicable near the end of a quarter.\nInsert the prospect's first name and company name.\nClearly state that the end of the quarter is approaching.\nOffer a *specific, limited-time* incentive tied to signing by a certain date (near EoQ).\nThe incentive should be concrete (e.g., accelerated timeline, small add-on service).\nExplain the benefit of taking advantage of the incentive.\nConclude by asking if the incentive is of interest as part of their decision process."
+            },
+            {
+                id: "proposal-close-file-late",
+                dealStage: "Proposal", // MODIFIED HERE
+                useCase: "Break-up / “permission to close your file” (late stage)",
+                tags: ["breakup", "post-proposal"],
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nWe delivered the proposal on [Date Proposal Sent] regarding how Brafton could help {{Prospect_Company}} achieve {{Goal_from_Proposal}}.\n\nI've tried reaching out a few times since then to see if you had any questions or had determined next steps.\n\nAs I haven't heard back, I understand that either the timing is not right, or perhaps our proposed solution isn't the direction you're choosing.\n\nI'll assume for now that you're not moving forward and will close your file.\n\nIf you change your mind or future needs arise, please don't hesitate to reconnect. We're here to help if the situation changes.\n\nBest regards,\n[Your Name]",
+                llmPrompt: "Adapt this template for a prospect who has received a proposal but has become unresponsive after multiple follow-up attempts.\nInsert their first name and company name.\nState when the proposal was sent and the high-level goal it addressed.\nClearly state the intention to close their file due to lack of response, indicating understanding that the timing or fit may not be right.\nLeave the door open for future contact.\nMaintain a professional, non-pushy tone."
+            },
+            {
+                id: "proposal-budget-constraints",
+                dealStage: "Proposal", // MODIFIED HERE
+                useCase: "Addressing potential budget or resource constraints",
+                tags: ["budget", "objection-handling", "post-proposal"],
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nThinking about the proposal and common considerations during the review process, I wanted to briefly touch on how clients often phase their investment or leverage existing resources.\n\nIf budget or internal capacity is a factor, we can explore starting with a focused phase addressing your highest priority need (e.g., {{Specific Phase/Service from Proposal}}) to demonstrate ROI quickly.\n\nAdditionally, our {{Relevant Brafton Service, e.g., Writer+ process or collaborative tools}} are designed to minimize the burden on your internal team's time.\n\nHappy to jump on a quick call to discuss flexible phasing options or how we integrate efficiently with teams like yours. {{Next_Step_CTA, e.g., Let me know if exploring this is helpful.}}",
+                llmPrompt: "Generate a template for a prospect reviewing a proposal, proactively addressing potential concerns around budget, internal resources, or implementation burden.\nInsert their first name.\nAcknowledge that these are common considerations.\nSuggest the possibility of phasing the investment, referencing a specific smaller service or phase from the proposal.\nBriefly mention how Brafton's process or tools minimize impact on internal resources.\nOffer a call to discuss flexible options or integration."
+            },
+            { 
+                id: "allstages-share-resource",
+                dealStage: "All Stages", 
+                useCase: "Sharing a valuable, relevant resource (Guide/Webinar/Tool)",
+                tags: ["resource-sharing"],
+                emailTemplate: "Hi {{Prospect_First_Name}},\n\nBased on our previous conversation about {{Related_Topic_or_Pain_Point, e.g., the challenges of tracking content performance}} or just knowing your role in {{Prospect_Industry}}, I thought you might find this helpful: [Link to Resource, e.g., Our latest guide to building a performance dashboard].\n\nIt includes [1-2 specific benefits of the resource, e.g., step-by-step instructions and template examples] that could be useful as you [Prospect's relevant task, e.g., refine your reporting process].\n\nHope you find it valuable! No need to schedule time unless you want to discuss it further.",
+                llmPrompt: "Create a flexible template for sharing a relevant Brafton resource (guide, webinar recording, tool, report) at any stage.\nInsert the prospect's first name.\nBriefly reference the context (previous conversation, their industry, or role) that makes the resource relevant.\nProvide a placeholder for the resource link.\nBriefly state 1-2 specific benefits or key takeaways from the resource.\nKeep the tone helpful and low-pressure, explicitly stating no meeting is required unless they choose."
+            }
+        ];
+        
+        // Data for Email Library (Content Restored & Subjects Revised)
+        const emailLibraryData = [ 
+            { 
+                id: "lib-reply-amb-focused", 
+                useCase: "Post-Discovery Follow-up", 
+                subject: "Follow-Up: Potential Execution Strategy Ideas (Post-Discovery)", // MODIFIED HERE
+                body: "Hi Soraya,\nHope you're having a productive few weeks.\nAs you finalize those details, I also wanted to briefly touch on how Brafton typically partners with clients on the execution side once that strategic groundwork is laid. \nBased on our discussion, this could involve:\n* Channel Strategy & Management: Leveraging our team's expertise (like Sam for Social and Eric for Paid) to manage campaigns across channels like LinkedIn and potentially Google Ads, including navigating the audience size considerations we discussed for LinkedIn and optimizing spend.\n* Content Development: Supporting your team by creating the necessary tailored content for different buying committee members, potentially using our Writer+ approach (AI-assist + expert writers) and collaborating with your SMEs to ensure credibility and address their time constraints.\n* Integrated Nurturing: Developing workflows to effectively nurture leads generated from campaigns, helping bridge the MQL-to-SQL gap you mentioned from past experiences.\nThese are just initial thoughts based on our conversation, of course. The main focus now is on your internal planning.\nAs you continue your planning, let me know if you've had a chance to review the discovery questions or if discussing any execution elements would be useful at this stage.\nBest,\nRamiro", 
+                tags: ["idea-sharing"] 
+            },
+            { 
+                id: "lib-pre-assign-team", 
+                useCase: "Post-Proposal / Team Intro", 
+                subject: "Post-Proposal: Meet Your Potential Brafton Team & Workflow Overview", // MODIFIED HERE
+                body: "Hi Nandini,\nWhile your leadership team reviews our proposal and decides on next steps, I’ve pre-assigned the colleagues who would support NASPO from day one to give your team an idea of who would be on your team.\n\nJonathan Hollstedt – SEO Strategist\n* Leads all technical audits, Core Web Vitals work, keyword research, and competitor analysis.\n* Compiles findings into clear, actionable reports and walks your team through every recommendation.\n\nNatalie Kimmel – Senior Content Marketing Strategist (Day-to-Day Lead)\n* Acts as your primary contact, coordinating timelines and priorities with Jonathan and your internal stakeholders.\n* Reviews each deliverable from an SEO lens to ensure everything maps back to NASPO’s goals.\n\nOscar Franco – Senior Project Manager\n* Keeps milestones on track, manages approvals, and oversees the transferable-spend ledger so you always know where resources are going.\n\n**What the day-to-day looks like**\n* Kick-off & discovery – A working session to align on KPIs, secure GA4/GSC access, and confirm success benchmarks (mirroring the onboarding timeline in our deck).\n* Weekly check-ins – 30-minute calls run by Natalie & Jon for status updates, quick-win sharing, and any priority shifts.\n* Monthly mini-reviews – Natalie and Jonathan present key metrics in a live Looker Studio dashboard (no licence cost) so you see progress in real time.\n* Quarterly insight deck (at no extra charge) – A detailed presentation of technical fixes, ranking gains, and next-step actions—delivered every quarter to keep leadership in the loop.\n* Flexible unit model – If a new priority surfaces, we simply move units to the tasks that will drive the most impact, without rewriting the SOW.\n\nWe aim to feel like an extension of your team, providing the expertise, structure, and transparency you saw outlined in the technical demonstration, but woven into your day-to-day workflow.\n\nLet me know if this overview lines up with what you’re envisioning or if there’s anything you’d like clarified.\nBest,\nRamiro", 
+                tags: ["team-intro", "post-proposal"] 
+            },
+            { 
+                id: "lib-case-study-followup", 
+                useCase: "Post-Proposal / Case Study", 
+                subject: "Post-Proposal: Case Study - Improving Web Page Performance", // MODIFIED HERE
+                body: "Hi Steve,\nFollowing up on our recent conversations, I wanted to share a concise example of how we've helped another client improve their web page performance, similar to some of the goals we discussed for SMC USA.\n\nClaritasRX approached us to strengthen the performance of key commercial web pages. Through a UX audit and targeted on-page optimizations focusing on elements like readability, CTA placement, information hierarchy, and page speed, we achieved significant results:\n* 313% increase in click rate\n* 129% increase in average user engagement time\n* 11% boost in page speed score\n* 12-second reduction in load time\n\nThis demonstrates how focused technical and UX improvements can directly impact user engagement and page performance.\n\nOn our last call, you mentioned potentially having a meeting tomorrow (May 2) to reconnect. Is that still a good time, or would another time next week work better?\nBest,\nRamiro", 
+                tags: ["case-study", "post-proposal"] 
+            },
+            { 
+                id: "lib-share-idea", 
+                useCase: "Value Add / Idea Sharing", 
+                subject: "Value Add Idea: Short-Form Video Trend (Follow-Up)", // MODIFIED HERE
+                body: "Hi Michael,\nHope you're having a productive start to the week.\n\nFollowing up on our conversations about short-form video, I was thinking about how effective these concise formats have become, especially in the B2B space for quickly communicating value or explaining features.\n\nOne trend we're seeing is companies successfully using short, engaging videos not just for top-of-funnel awareness on social platforms, but also deeper in the sales cycle – like in email sequences or on landing pages – to maintain engagement and clarify complex points quickly.\n\nJust sharing a thought based on our discussion!\nBest,\nRamiro", 
+                tags: ["idea-sharing"] 
+            }
+        ];
+
+        // --- DOM Element References ---
+        const mainAccordionContainer = document.getElementById('email-templates-accordion-container');
+        const dealStageFiltersContainer = document.getElementById('deal-stage-filters');
+        const tagFiltersContainer = document.getElementById('tag-filters-container');
+        const tagsFilterToggle = document.getElementById('tags-filter-toggle');
+        const tagsToggleText = document.getElementById('tags-toggle-text'); 
+        const searchInput = document.getElementById('search-use-case');
+        const emptyStateContainer = document.getElementById('empty-state-container');
+        const recentlyUsedContainer = document.getElementById('recently-used-section');
+        const recentlyUsedToggle = document.getElementById('recently-used-toggle'); // New
+        const recentlyUsedGridContainer = document.getElementById('recently-used-grid-container'); // New
+        const recentlyUsedToggleText = document.getElementById('recently-used-toggle-text'); // New
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggleButton = document.getElementById('sidebar-toggle-button'); 
+        const mainContent = document.getElementById('main-content');
+        const sidebarNav = document.getElementById('sidebar-nav');
+        const mainSections = document.querySelectorAll('.main-section');
+        // Email Library Elements
+        const emailLibraryContent = document.getElementById('email-library-content');
+        const emailLibraryEmptyState = document.getElementById('email-library-empty-state');
+        const emailLibraryTagFiltersContainer = document.getElementById('email-library-tag-filters-container'); 
+        const emailLibraryTagsFilterToggle = document.getElementById('email-library-tags-filter-toggle'); 
+        const emailLibraryTagsToggleText = document.getElementById('email-library-tags-toggle-text'); 
+        // Email Modal Elements
+        const emailModalOverlay = document.getElementById('email-modal-overlay');
+        const emailModalCloseButton = document.getElementById('email-modal-close-button'); 
+        const emailModalSubject = document.getElementById('email-modal-subject'); 
+        const emailModalBody = document.getElementById('email-modal-body'); 
+        const emailModalCopyButtonsContainer = document.getElementById('email-modal-copy-buttons'); 
+        // Template Modal Elements 
+        const templateModalOverlay = document.getElementById('template-modal-overlay');
+        const templateModalCloseButton = document.getElementById('template-modal-close-button');
+        const templateModalTitle = document.getElementById('template-modal-title');
+        const templateModalTemplateContent = document.getElementById('template-modal-template-content');
+        const templateModalPromptContent = document.getElementById('template-modal-prompt-content');
+        const templateModalCopyTemplateButton = document.getElementById('template-modal-copy-template-button');
+        const templateModalCopyPromptButton = document.getElementById('template-modal-copy-prompt-button');
+        // Other Elements
+        const implementationTipsSection = document.getElementById('implementation-tips'); 
+        const copyNotification = document.getElementById('copy-notification'); 
+
+        const MAX_RECENTLY_USED = 3; 
+
+        const refinedCoreTags = [ 
+            "breakup", "budget", "case-study", "objection-handling", 
+            "post-proposal", "team-intro", "idea-sharing", "resource-sharing"
+        ].sort(); 
+
+
+        // --- State Variables ---
+        let activeDealStageFilter = "All"; 
+        let activeTemplateTags = []; 
+        let activeLibraryTags = []; 
+        let currentView = 'template-bank'; 
+        let copyTimeout; 
+        let currentTemplateInModal = null; // To store template data for modal copy buttons
+
+        // --- Core Functions (Formatting, Pills, LocalStorage) ---
+        function formatTextForDisplay(text) {
+            if (!text) return '';
+            const placeholderMap = {};
+            let placeholderIndex = 0;
+            text = text.replace(/(\{\{.*?\}\}|\[.*?\])/g, (match) => {
+                const token = `__PLACEHOLDER_${placeholderIndex++}__`;
+                placeholderMap[token] = match;
+                return token;
+            });
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            let htmlOutput = '';
+            const lines = text.split('\n');
+            let inList = false;
+            for (let i = 0; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (line.startsWith('* ')) { 
+                    if (!inList) { htmlOutput += '<ul>'; inList = true; }
+                    htmlOutput += '<li>' + line.substring(2).trim() + '</li>';
+                } else { 
+                    if (inList) { htmlOutput += '</ul>'; inList = false; }
+                    if (line) { htmlOutput += '<p>' + line + '</p>'; }
+                }
+            }
+            if (inList) { htmlOutput += '</ul>'; } 
+            htmlOutput = htmlOutput.replace(/__PLACEHOLDER_(\d+)__/g, (match, index) => {
+                const originalPlaceholder = placeholderMap[match];
+                if (originalPlaceholder.startsWith('{{')) return `<span class="placeholder">${originalPlaceholder}</span>`;
+                if (originalPlaceholder.startsWith('[')) return `<span class="placeholder-bracket">${originalPlaceholder}</span>`;
+                return originalPlaceholder;
+            });
+            return htmlOutput;
+        }
+
+        function createPill(text, type) {
+            const pill = document.createElement('span');
+            pill.classList.add('pill');
+            if (type === 'dealStage') {
+                 // Use updated stage names for styling
+                if (text.toLowerCase() === 'pre-demo') pill.classList.add('pill-foam-ocean');
+                else if (text.toLowerCase() === 'post-demo') pill.classList.add('pill-ocean-blue'); 
+                else if (text.toLowerCase() === 'proposal') pill.classList.add('pill-sunrise');
+            }
+            pill.textContent = text;
+            return pill;
+        }
+
+        function getRecentlyUsedTemplates() {
+            const recent = localStorage.getItem('recentlyUsedTemplates');
+            return recent ? JSON.parse(recent) : [];
+        }
+
+        function addTemplateToRecentlyUsed(templateId) {
+            let recent = getRecentlyUsedTemplates();
+            recent = recent.filter(id => id !== templateId);
+            recent.unshift(templateId); 
+            if (recent.length > MAX_RECENTLY_USED) {
+                recent.pop(); 
+            }
+            localStorage.setItem('recentlyUsedTemplates', JSON.stringify(recent));
+            renderRecentlyUsed(); 
+        }
+        
+        /**
+         * Renders the "Recently Used Templates" section, now collapsible.
+         */
+        function renderRecentlyUsed() {
+            // Clear only the grid container, not the toggle header
+            recentlyUsedGridContainer.innerHTML = ''; 
+            const recentIds = getRecentlyUsedTemplates();
+
+            // Hide the entire section if no recent items or not in template-bank view
+            if (recentIds.length === 0 || currentView !== 'template-bank') { 
+                recentlyUsedContainer.classList.add('hidden');
+                return;
+            }
+            recentlyUsedContainer.classList.remove('hidden'); // Show section if there are items
+
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'; 
+
+            recentIds.forEach(id => {
+                const template = emailTemplateData.find(t => t.id === id);
+                if (template) {
+                    const card = createTemplateCard(template); 
+                    card.classList.add('recently-used-card'); 
+                    grid.appendChild(card);
+                }
+            });
+            recentlyUsedGridContainer.appendChild(grid);
+
+            // Update toggle state based on content (ensure it's visible if items exist)
+            // If the container is currently collapsed but has items, keep it collapsed but ready
+            if (!recentlyUsedGridContainer.classList.contains('collapsed')) {
+                 // Recalculate scrollHeight in case content changed
+                 setTimeout(() => {
+                    if(recentlyUsedGridContainer.scrollHeight > 0) { // Avoid setting maxHeight to 0 if empty
+                        recentlyUsedGridContainer.style.maxHeight = recentlyUsedGridContainer.scrollHeight + "px";
+                    }
+                 }, 0);
+            }
+        }
+
+
+        // --- Copy Notification Function ---
+        function showCopyNotification(message) {
+            if (copyTimeout) clearTimeout(copyTimeout); 
+            copyNotification.textContent = message;
+            copyNotification.classList.add('show');
+            copyTimeout = setTimeout(() => {
+                copyNotification.classList.remove('show');
+            }, 2500); 
+        }
+
+        /**
+         * Fallback copy method using document.execCommand.
+         * @param {string} textToCopy - The text to copy.
+         * @returns {boolean} - True if copy was successful, false otherwise.
+         */
+        function fallbackCopyTextToClipboard(textToCopy) {
+            const textArea = document.createElement("textarea");
+            textArea.value = textToCopy;
+            
+            // Make the textarea off-screen
+            textArea.style.position = "fixed";
+            textArea.style.top = "-9999px";
+            textArea.style.left = "-9999px";
+            
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            let successful = false;
+            try {
+                successful = document.execCommand('copy');
+                if (!successful) {
+                    console.error('Fallback copy: document.execCommand failed.');
+                }
+            } catch (err) {
+                console.error('Fallback copy: Error during document.execCommand:', err);
+                successful = false;
+            }
+
+            document.body.removeChild(textArea);
+            return successful;
+        }
+
+
+        /**
+         * Attempts to copy text using the modern Clipboard API, with fallback to execCommand.
+         * @param {string} textToCopy - The text to copy.
+         * @param {string} successMessage - Message for the notification on success.
+         * @param {string} failureMessage - Message for the notification on failure.
+         * @param {function} [onSuccessCallback] - Optional callback to run on successful copy.
+         */
+        function copyTextWithFallback(textToCopy, successMessage = 'Copied!', failureMessage = 'Copy Failed!', onSuccessCallback) {
+            if (!textToCopy || typeof textToCopy !== 'string') {
+                console.error('Copy failed: Invalid text provided.');
+                showCopyNotification(failureMessage);
+                return;
+            }
+
+            // Try modern Clipboard API first
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => {
+                        showCopyNotification(successMessage);
+                        if (onSuccessCallback) {
+                            onSuccessCallback();
+                        }
+                    })
+                    .catch(err => {
+                        console.warn('Navigator clipboard failed, trying fallback:', err);
+                        // If navigator.clipboard fails, try the fallback
+                        if (fallbackCopyTextToClipboard(textToCopy)) {
+                            showCopyNotification(successMessage);
+                             if (onSuccessCallback) {
+                                onSuccessCallback();
+                            }
+                        } else {
+                            showCopyNotification(failureMessage + ' (Fallback also failed)');
+                        }
+                    });
+            } else {
+                // If Clipboard API is not available, directly use the fallback
+                console.warn('Navigator clipboard not available, using fallback.');
+                if (fallbackCopyTextToClipboard(textToCopy)) {
+                    showCopyNotification(successMessage);
+                     if (onSuccessCallback) {
+                        onSuccessCallback();
+                    }
+                } else {
+                    showCopyNotification(failureMessage + ' (Fallback failed)');
+                }
+            }
+        }
+
+
+        // --- Template Card Creation ---
+        function createTemplateCard(template) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.templateId = template.id; 
+            card.dataset.dealStage = template.dealStage;
+            card.dataset.useCase = template.useCase.toLowerCase();
+            if(template.tags) card.dataset.tags = template.tags.join(',');
+
+            const cardContentWrapper = document.createElement('div'); 
+
+            if (template.dealStage !== "All Stages") {
+                const dealStagePill = createPill(template.dealStage, 'dealStage');
+                cardContentWrapper.appendChild(dealStagePill);
+            }
+            
+            if (template.tags && template.tags.length > 0) {
+                const tagsOnCardContainer = document.createElement('div');
+                tagsOnCardContainer.className = 'mt-2 flex flex-wrap gap-1'; 
+                template.tags.forEach(tag => {
+                    if (refinedCoreTags.includes(tag)) { 
+                        const tagPill = document.createElement('span');
+                        tagPill.className = 'inline-block bg-gray-200 text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full';
+                        tagPill.textContent = tag;
+                        tagsOnCardContainer.appendChild(tagPill);
+                    }
+                });
+                if(tagsOnCardContainer.childElementCount > 0) { 
+                    cardContentWrapper.appendChild(tagsOnCardContainer);
+                }
+            }
+
+            const useCaseTitle = document.createElement('h3');
+            useCaseTitle.textContent = template.useCase;
+            cardContentWrapper.appendChild(useCaseTitle);
+
+            card.appendChild(cardContentWrapper); 
+
+            const viewButton = document.createElement('button');
+            viewButton.classList.add('view-template-button');
+            viewButton.textContent = 'View Template/Prompt';
+            viewButton.onclick = (e) => {
+                e.stopPropagation(); 
+                openTemplateModal(template); 
+            };
+
+            card.appendChild(viewButton); 
+
+            return card;
+        }
+
+        // --- Email Library Card Creation ---
+        function createEmailLibraryCard(email) {
+            const card = document.createElement('div');
+            card.classList.add('card', 'email-library-card'); 
+            card.dataset.emailId = email.id;
+            if(email.tags) card.dataset.tags = email.tags.join(','); 
+            const subjectTitle = document.createElement('h3');
+            subjectTitle.textContent = email.subject || "No Subject Provided"; 
+            const useCaseLabel = document.createElement('span');
+            useCaseLabel.className = 'use-case-label';
+            useCaseLabel.textContent = email.useCase;
+            if (email.tags && email.tags.length > 0) {
+                const tagsOnCardContainer = document.createElement('div');
+                tagsOnCardContainer.className = 'mt-1 mb-2 flex flex-wrap gap-1'; 
+                email.tags.forEach(tag => {
+                    if (refinedCoreTags.includes(tag)) {
+                        const tagPill = document.createElement('span');
+                        tagPill.className = 'inline-block bg-gray-200 text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full';
+                        tagPill.textContent = tag;
+                        tagsOnCardContainer.appendChild(tagPill);
+                    }
+                });
+                if(tagsOnCardContainer.childElementCount > 0) { 
+                    card.appendChild(tagsOnCardContainer);
+                }
+            }
+            const bodyPreview = document.createElement('div');
+            bodyPreview.classList.add('email-body-preview');
+            const previewLines = email.body.split('\n').slice(0, 3).join('\n');
+            bodyPreview.textContent = previewLines + (email.body.split('\n').length > 3 ? '...' : '');
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'card-actions';
+            const viewFullButton = document.createElement('button');
+            viewFullButton.classList.add('view-full-button');
+            viewFullButton.textContent = 'View Full Email';
+            viewFullButton.onclick = () => openEmailModal(email); 
+            actionsDiv.appendChild(viewFullButton); 
+            card.appendChild(subjectTitle);
+            card.appendChild(useCaseLabel);
+            card.appendChild(bodyPreview);
+            card.appendChild(actionsDiv);
+            return card;
+        }
+
+        // --- Modal Functions ---
+
+        // Email Library Modal (Uses new copy function)
+        function openEmailModal(email) {
+            emailModalSubject.textContent = email.subject || "No Subject Provided";
+            emailModalBody.innerHTML = formatTextForDisplay(email.body); 
+            emailModalCopyButtonsContainer.innerHTML = ''; 
+            
+            const copySubjectButton = document.createElement('button');
+            copySubjectButton.classList.add('copy-button');
+            copySubjectButton.textContent = 'Copy Subject';
+            copySubjectButton.onclick = () => copyTextWithFallback(email.subject, 'Subject Copied!', 'Copy Failed!');
+            
+            const copyBodyButton = document.createElement('button');
+            copyBodyButton.classList.add('copy-button');
+            copyBodyButton.textContent = 'Copy Body';
+            copyBodyButton.onclick = () => copyTextWithFallback(email.body, 'Body Copied!', 'Copy Failed!');
+
+            emailModalCopyButtonsContainer.appendChild(copySubjectButton);
+            emailModalCopyButtonsContainer.appendChild(copyBodyButton);
+            emailModalOverlay.classList.add('active'); 
+        }
+
+        function closeEmailModal() {
+            emailModalOverlay.classList.remove('active'); 
+            emailModalSubject.textContent = '';
+            emailModalBody.innerHTML = '';
+            emailModalCopyButtonsContainer.innerHTML = ''; 
+        }
+
+        // Template/Prompt Modal 
+        function openTemplateModal(template) {
+            currentTemplateInModal = template; // Store template data for copy buttons
+            templateModalTitle.textContent = template.useCase;
+            templateModalTemplateContent.innerHTML = formatTextForDisplay(template.emailTemplate);
+            templateModalPromptContent.innerHTML = formatTextForDisplay(template.llmPrompt);
+            templateModalOverlay.classList.add('active');
+        }
+
+        function closeTemplateModal() {
+            templateModalOverlay.classList.remove('active');
+            templateModalTitle.textContent = '';
+            templateModalTemplateContent.innerHTML = '';
+            templateModalPromptContent.innerHTML = '';
+            currentTemplateInModal = null; // Clear stored template data
+        }
+
+
+        // --- Rendering Logic ---
+        function groupTemplatesByDealStage(templates) {
+            return templates.reduce((acc, template) => {
+                if (template.dealStage === "All Stages") return acc; 
+                const stage = template.dealStage;
+                if (!acc[stage]) acc[stage] = [];
+                acc[stage].push(template);
+                return acc;
+            }, {});
+        }
+        
+        function renderTemplatesView() {
+            mainAccordionContainer.innerHTML = ''; 
+            emptyStateContainer.innerHTML = ''; 
+            emptyStateContainer.classList.add('hidden'); 
+
+            const searchQuery = searchInput.value.toLowerCase();
+            
+            const actualDealStages = ["All", ...new Set(emailTemplateData.filter(t => t.dealStage !== "All Stages").map(t => t.dealStage))];
+            const displayableTags = refinedCoreTags.filter(coreTag => 
+                emailTemplateData.some(template => template.tags && template.tags.includes(coreTag))
+            ); 
+
+            const allStagesTemplates = emailTemplateData.filter(t => t.dealStage === "All Stages");
+
+            if (dealStageFiltersContainer.childElementCount === 0 && actualDealStages.length > 0) {
+                dealStageFiltersContainer.innerHTML = ''; 
+                actualDealStages.forEach(stage => {
+                    const button = document.createElement('button');
+                    button.classList.add('filter-button');
+                    button.textContent = stage;
+                    if (stage === activeDealStageFilter) button.classList.add('active');
+                    button.onclick = () => {
+                        activeDealStageFilter = stage;
+                        dealStageFiltersContainer.querySelectorAll('.filter-button').forEach(btn => btn.classList.toggle('active', btn.textContent === stage));
+                        renderTemplatesView(); 
+                    };
+                    dealStageFiltersContainer.appendChild(button);
+                });
+            }
+
+            if (tagFiltersContainer.childElementCount === 0 && displayableTags.length > 0) {
+                tagFiltersContainer.innerHTML = ''; 
+                displayableTags.forEach(tag => {
+                    const button = document.createElement('button');
+                    button.classList.add('tag-filter-button');
+                    button.textContent = tag;
+                    button.dataset.tag = tag;
+                    if (activeTemplateTags.includes(tag)) button.classList.add('active'); 
+                    button.onclick = () => {
+                        button.classList.toggle('active');
+                        if (activeTemplateTags.includes(tag)) {
+                            activeTemplateTags = activeTemplateTags.filter(t => t !== tag);
+                        } else {
+                            activeTemplateTags.push(tag);
+                        }
+                        renderTemplatesView(); 
+                    };
+                    tagFiltersContainer.appendChild(button);
+                });
+            }
+
+            const groupedTemplates = groupTemplatesByDealStage(emailTemplateData);
+            let visibleAccordionsCount = 0;
+            let totalVisibleCards = 0;
+
+            for (const stage in groupedTemplates) {
+                if (activeDealStageFilter !== "All" && stage !== activeDealStageFilter) {
+                    continue; 
+                }
+
+                const templatesInStage = groupedTemplates[stage];
+                let visibleCardsInStageCount = 0;
+                const accordionContent = document.createElement('div');
+                accordionContent.classList.add('accordion-content');
+                const gridContainerForStage = document.createElement('div');
+                gridContainerForStage.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'; 
+
+                templatesInStage.forEach(template => {
+                    // Filter based on search and tags *before* creating the card
+                    const useCaseLower = template.useCase.toLowerCase();
+                    const emailLower = template.emailTemplate.toLowerCase();
+                    const llmLower = template.llmPrompt.toLowerCase();
+                    const matchesSearch = searchQuery === "" || 
+                        useCaseLower.includes(searchQuery) ||
+                        emailLower.includes(searchQuery) || // Still search content even if not displayed
+                        llmLower.includes(searchQuery);    // Still search content even if not displayed
+                    
+                    const templateTags = template.tags || [];
+                    const matchesTags = activeTemplateTags.length === 0 || activeTemplateTags.every(at => templateTags.includes(at));
+
+                    if (matchesSearch && matchesTags) {
+                        const card = createTemplateCard(template); // Create card only if it matches
+                        gridContainerForStage.appendChild(card); 
+                        visibleCardsInStageCount++;
+                        totalVisibleCards++;
+                    }
+                });
+
+                if (visibleCardsInStageCount > 0) {
+                    visibleAccordionsCount++;
+                    accordionContent.appendChild(gridContainerForStage); 
+                    const accordionItem = document.createElement('div');
+                    accordionItem.classList.add('accordion-item');
+                    const accordionHeader = document.createElement('div');
+                    accordionHeader.classList.add('accordion-header');
+                    accordionHeader.innerHTML = `<span>${stage}</span><span class="arrow">&#x276F;</span>`;
+                    accordionItem.appendChild(accordionHeader);
+                    accordionItem.appendChild(accordionContent);
+                    mainAccordionContainer.appendChild(accordionItem);
+                }
+            }
+            
+            let generalTemplatesAccordionItem = mainAccordionContainer.querySelector('.accordion-item[data-stage="All Stages Search Results"]');
+            if (generalTemplatesAccordionItem) generalTemplatesAccordionItem.remove(); 
+
+            if (activeDealStageFilter === "All") { 
+                const matchingGeneralTemplates = [];
+                const gridContainerForAllStages = document.createElement('div'); 
+                gridContainerForAllStages.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4';
+
+                allStagesTemplates.forEach(template => {
+                    const useCaseLower = template.useCase.toLowerCase();
+                    const emailLower = template.emailTemplate.toLowerCase();
+                    const llmLower = template.llmPrompt.toLowerCase();
+                    const matchesSearch = searchQuery === "" || 
+                        useCaseLower.includes(searchQuery) ||
+                        emailLower.includes(searchQuery) ||
+                        llmLower.includes(searchQuery);
+                    
+                    const templateTags = template.tags || [];
+                    const matchesTags = activeTemplateTags.length === 0 || activeTemplateTags.every(at => templateTags.includes(at));
+
+                    if (matchesSearch && matchesTags) {
+                        gridContainerForAllStages.appendChild(createTemplateCard(template)); 
+                        matchingGeneralTemplates.push(template); 
+                        totalVisibleCards++; 
+                    }
+                });
+
+                if (matchingGeneralTemplates.length > 0) {
+                    visibleAccordionsCount++; 
+                    generalTemplatesAccordionItem = document.createElement('div');
+                    generalTemplatesAccordionItem.classList.add('accordion-item'); 
+                    generalTemplatesAccordionItem.dataset.stage = "All Stages Search Results"; 
+                    const header = document.createElement('div');
+                    header.classList.add('accordion-header'); 
+                    header.innerHTML = `<span>General Templates (Matching Filters)</span> <span class="arrow">&#x276F;</span>`;
+                    const content = document.createElement('div');
+                    content.classList.add('accordion-content');
+                    content.appendChild(gridContainerForAllStages); 
+                    generalTemplatesAccordionItem.appendChild(header);
+                    generalTemplatesAccordionItem.appendChild(content);
+                    mainAccordionContainer.appendChild(generalTemplatesAccordionItem); 
+                }
+            }
+
+            if (totalVisibleCards === 0) {
+                let emptyMessage = "No templates found.";
+                let filtersApplied = [];
+                if (activeDealStageFilter && activeDealStageFilter !== "All") filtersApplied.push(`stage: <strong>${activeDealStageFilter}</strong>`);
+                if (activeTemplateTags.length > 0) filtersApplied.push(`tags: <strong>${activeTemplateTags.join(', ')}</strong>`);
+                if (searchQuery) filtersApplied.push(`search: "<strong>${searchQuery}</strong>"`);
+                if (filtersApplied.length > 0) {
+                    emptyMessage = `No templates found matching ${filtersApplied.join(' & ')}.`;
+                }
+                emptyMessage += "<br>Try adjusting your filters or search keywords.";
+                emptyStateContainer.innerHTML = `<div class="empty-state-message">${emptyMessage}</div>`;
+                emptyStateContainer.classList.remove('hidden');
+            }
+
+            document.querySelectorAll('#email-templates-accordion-container .accordion-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    const isActive = this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    if (isActive) {
+                        content.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + "px"; 
+                    } else {
+                        content.classList.remove('active');
+                        content.style.maxHeight = "0"; 
+                    }
+                });
+            });
+            
+            if (visibleAccordionsCount === 1) { 
+                const singleAccordionHeader = mainAccordionContainer.querySelector(`.accordion-item .accordion-header`);
+                if (singleAccordionHeader && !singleAccordionHeader.classList.contains('active')) {
+                   singleAccordionHeader.click(); 
+                }
+            } 
+            renderRecentlyUsed(); 
+        }
+
+        // Email Library Rendering (Unchanged)
+        function renderEmailLibraryView() {
+            emailLibraryContent.innerHTML = ''; 
+            emailLibraryEmptyState.classList.add('hidden'); 
+            const libraryDisplayableTags = refinedCoreTags.filter(coreTag => 
+                emailLibraryData.some(email => email.tags && email.tags.includes(coreTag))
+            );
+            if (emailLibraryTagFiltersContainer.childElementCount === 0 && libraryDisplayableTags.length > 0) {
+                emailLibraryTagFiltersContainer.innerHTML = ''; 
+                libraryDisplayableTags.forEach(tag => {
+                    const button = document.createElement('button');
+                    button.classList.add('tag-filter-button');
+                    button.textContent = tag;
+                    button.dataset.tag = tag;
+                    if (activeLibraryTags.includes(tag)) button.classList.add('active'); 
+                    button.onclick = () => {
+                        button.classList.toggle('active');
+                        if (activeLibraryTags.includes(tag)) {
+                            activeLibraryTags = activeLibraryTags.filter(t => t !== tag);
+                        } else {
+                            activeLibraryTags.push(tag);
+                        }
+                        renderEmailLibraryView(); 
+                    };
+                    emailLibraryTagFiltersContainer.appendChild(button);
+                });
+            }
+            const gridContainer = document.createElement('div'); 
+            gridContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'; 
+            let totalEmailsRendered = 0;
+            emailLibraryData.forEach(email => {
+                const emailTags = email.tags || [];
+                const matchesTags = activeLibraryTags.length === 0 || activeLibraryTags.every(at => emailTags.includes(at));
+                if (matchesTags) { 
+                    const card = createEmailLibraryCard(email);
+                    gridContainer.appendChild(card); 
+                    totalEmailsRendered++;
+                }
+            });
+            emailLibraryContent.appendChild(gridContainer); 
+            if (totalEmailsRendered === 0) {
+                let emptyMessage = "No emails found.";
+                if (activeLibraryTags.length > 0) {
+                    emptyMessage = `No emails found matching tags: <strong>${activeLibraryTags.join(', ')}</strong>.`;
+                }
+                emailLibraryEmptyState.innerHTML = `<div class="empty-state-message">${emptyMessage}</div>`;
+                emailLibraryEmptyState.classList.remove('hidden');
+            }
+        }
+
+        // --- Event Listeners ---
+        sidebarToggleButton.addEventListener('click', () => { 
+            sidebar.classList.toggle('collapsed');
+            mainContent.style.marginLeft = sidebar.classList.contains('collapsed') ? 'var(--sidebar-width-collapsed)' : 'var(--sidebar-width-expanded)';
+        });
+
+        tagsFilterToggle.addEventListener('click', function() {
+            const isCollapsed = tagFiltersContainer.classList.toggle('collapsed');
+            this.querySelector('.arrow').classList.toggle('collapsed'); 
+            tagsToggleText.textContent = isCollapsed ? '[Show]' : '[Hide]'; 
+        });
+        
+        emailLibraryTagsFilterToggle.addEventListener('click', function() {
+            const isCollapsed = emailLibraryTagFiltersContainer.classList.toggle('collapsed');
+            this.querySelector('.arrow').classList.toggle('collapsed');
+            emailLibraryTagsToggleText.textContent = isCollapsed ? '[Show]' : '[Hide]'; 
+        });
+
+        searchInput.addEventListener('input', () => {
+            if (currentView === 'template-bank') {
+                renderTemplatesView();
+            } 
+        });
+        
+        sidebarNav.addEventListener('click', (e) => {
+            const targetLink = e.target.closest('a');
+            if (!targetLink) return; 
+            e.preventDefault(); 
+            const targetSectionId = targetLink.getAttribute('data-section');
+            if (currentView === targetSectionId) return; 
+            sidebarNav.querySelectorAll('a').forEach(link => link.classList.remove('active'));
+            targetLink.classList.add('active');
+            mainSections.forEach(section => section.classList.toggle('hidden', section.id !== targetSectionId));
+            implementationTipsSection.classList.toggle('hidden', targetSectionId === 'email-library-section'); 
+            currentView = targetSectionId; 
+            if (currentView === 'template-bank') {
+                renderTemplatesView(); 
+            } else if (currentView === 'email-library-section') {
+                renderEmailLibraryView();
+                recentlyUsedContainer.classList.add('hidden'); 
+            }
+        });
+
+        // Modal Close Listeners
+        emailModalCloseButton.addEventListener('click', closeEmailModal);
+        emailModalOverlay.addEventListener('click', (e) => {
+            if (e.target === emailModalOverlay) closeEmailModal();
+        });
+        templateModalCloseButton.addEventListener('click', closeTemplateModal);
+        templateModalOverlay.addEventListener('click', (e) => {
+            if (e.target === templateModalOverlay) closeTemplateModal();
+        });
+
+        // Template Modal Copy Button Listeners (Using Fallback)
+        templateModalCopyTemplateButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (currentTemplateInModal && currentTemplateInModal.emailTemplate) {
+                 copyTextWithFallback(
+                    currentTemplateInModal.emailTemplate, 
+                    'Template Copied!', 
+                    'Copy Failed! See console for details.',
+                    () => { // Success callback
+                         addTemplateToRecentlyUsed(currentTemplateInModal.id); 
+                    }
+                );
+            } else {
+                 console.error('Template copy failed: No template data found in modal.');
+                 showCopyNotification('Copy Failed!');
+            }
+        });
+        templateModalCopyPromptButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+             if (currentTemplateInModal && currentTemplateInModal.llmPrompt) {
+                 copyTextWithFallback(
+                    currentTemplateInModal.llmPrompt, 
+                    'Prompt Copied!',
+                    'Copy Failed! See console for details.'
+                );
+            } else {
+                 console.error('Prompt copy failed: No prompt data found in modal.');
+                 showCopyNotification('Copy Failed!');
+            }
+        });
+
+        // Recently Used Toggle Listener
+        recentlyUsedToggle.addEventListener('click', function() {
+            const gridContainer = recentlyUsedGridContainer; // Use the specific grid container
+            const isCollapsed = gridContainer.classList.toggle('collapsed');
+            this.querySelector('.arrow').classList.toggle('collapsed');
+            recentlyUsedToggleText.textContent = isCollapsed ? '[Show]' : '[Hide]'; 
+            if (isCollapsed) {
+                gridContainer.style.maxHeight = "0";
+            } else {
+                // Set max-height to scroll height for smooth animation
+                gridContainer.style.maxHeight = gridContainer.scrollHeight + "px"; 
+            }
+        });
+
+
+        // --- Initial Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialActiveLink = sidebarNav.querySelector('a.active');
+            const initialSectionId = initialActiveLink ? initialActiveLink.getAttribute('data-section') : 'template-bank';
+            mainSections.forEach(section => section.classList.toggle('hidden', section.id !== initialSectionId));
+            implementationTipsSection.classList.toggle('hidden', initialSectionId === 'email-library-section');
+            currentView = initialSectionId;
+            if (currentView === 'template-bank') renderTemplatesView(); 
+            else if (currentView === 'email-library-section') renderEmailLibraryView();
+            if (!tagFiltersContainer.classList.contains('collapsed')) {
+                tagFiltersContainer.classList.add('collapsed');
+                tagsFilterToggle.querySelector('.arrow').classList.add('collapsed');
+                tagsToggleText.textContent = '[Show]';
+            }
+            if (emailLibraryTagFiltersContainer && !emailLibraryTagFiltersContainer.classList.contains('collapsed')) {
+                emailLibraryTagFiltersContainer.classList.add('collapsed');
+                emailLibraryTagsFilterToggle.querySelector('.arrow').classList.add('collapsed');
+                emailLibraryTagsToggleText.textContent = '[Show]';
+            }
+            // Initialize Recently Used section state
+            if (recentlyUsedGridContainer && recentlyUsedGridContainer.classList.contains('collapsed')) {
+                 recentlyUsedGridContainer.style.maxHeight = "0";
+            } else if (recentlyUsedGridContainer) {
+                 // Ensure grid container exists before trying to access scrollHeight
+                 // Set initial max-height based on scrollHeight if not collapsed
+                 setTimeout(() => { // Use timeout to ensure layout is calculated
+                    // Check if the container still exists and is not collapsed before setting max height
+                    if (recentlyUsedGridContainer && !recentlyUsedGridContainer.classList.contains('collapsed')) {
+                         if(recentlyUsedGridContainer.scrollHeight > 0) { 
+                            recentlyUsedGridContainer.style.maxHeight = recentlyUsedGridContainer.scrollHeight + "px"; 
+                         } else {
+                            // If scrollHeight is 0 (e.g., no items yet), set a default small height or keep it 0
+                            recentlyUsedGridContainer.style.maxHeight = "0"; 
+                         }
+                    }
+                 }, 0);
+            }
+        });
+
+        // --- Implementation Tips Accordions ---
+        document.querySelectorAll('.tips-main-accordion-header, .tips-sub-accordion-header').forEach(header => {
+            header.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling; 
+                content.classList.toggle('active');
+                content.style.maxHeight = content.classList.contains('active') ? content.scrollHeight + "px" : "0";
+            });
+        });
+
+    </script>
+</body>
+</html>
